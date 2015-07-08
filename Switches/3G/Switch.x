@@ -67,7 +67,7 @@ static void FSDataStatusChanged(void);
 - (FSSwitchState)stateForSwitchIdentifier:(NSString *)switchIdentifier
 {
   NSArray *supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
-  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:(id)[self chosenDataRate:TRUE]];
+  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:(id)[self chosenDataRate:YES]];
   if (desiredRateIndex == NSNotFound)
     return FSSwitchStateOff;
   NSUInteger currentRateIndex = [supportedDataRates indexOfObject:(id)CTRegistrationGetCurrentMaxAllowedDataRate()];
@@ -81,7 +81,7 @@ static void FSDataStatusChanged(void);
   if (newState == FSSwitchStateIndeterminate)
     return;
   NSArray *supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
-  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:_desiredDataRate];
+  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:(id)[self chosenDataRate:YES]];
   if (desiredRateIndex == NSNotFound)
     return;
   NSUInteger currentRateIndex = [supportedDataRates indexOfObject:(id)CTRegistrationGetCurrentMaxAllowedDataRate()];
@@ -89,10 +89,10 @@ static void FSDataStatusChanged(void);
     return;
   if (newState) {
     if (currentRateIndex < desiredRateIndex)
-      CTRegistrationSetMaxAllowedDataRate((CFStringRef)_desiredDataRate);
+      CTRegistrationSetMaxAllowedDataRate([self chosenDataRate:YES]);
   } else {
     if ((currentRateIndex >= desiredRateIndex) && desiredRateIndex)
-      CTRegistrationSetMaxAllowedDataRate((CFStringRef)[supportedDataRates objectAtIndex:desiredRateIndex - 1]);
+      CTRegistrationSetMaxAllowedDataRate([self chosenDataRate:NO]);
   }
 }
 
