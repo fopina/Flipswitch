@@ -151,16 +151,16 @@ static void FSDataStatusChanged(void)
   return result;
 }
 
-- (CFStringRef)chosenDataRate(Boolean dataRateForON) {
-	CFStringRef key = dataRateForON ? CFSTR("onDataRate") : CFSTR("offDataRate")
+- (CFStringRef)chosenDataRate:(Boolean)forON {
+	CFStringRef key = forON ? CFSTR("onDataRate") : CFSTR("offDataRate")
 	Boolean valid;
 	CFIndex value = CFPreferencesGetAppIntegerValue(CFSTR(key), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
 
 	if (!valid) {
 		if ([self.bundle.bundlePath isEqualToString:@"/Library/Switches/LTE.bundle"]) {
-			return dataRateForON ? kCTRegistrationDataRate4G : kCTRegistrationDataRate3G;
+			return forON ? kCTRegistrationDataRate4G : kCTRegistrationDataRate3G;
 		}
-		return dataRateForON ? kCTRegistrationDataRate3G : kCTRegistrationDataRate2G;
+		return forON ? kCTRegistrationDataRate3G : kCTRegistrationDataRate2G;
 	}
 
 	switch (value) {
