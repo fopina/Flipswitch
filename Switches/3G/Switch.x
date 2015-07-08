@@ -164,11 +164,17 @@ static void FSDataStatusChanged(void)
 - (id)init
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
-		_supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
+		_supportedDataRates = [NSArray arrayWithObjects:
+ 			@"4G",
+ 			@"3G",
+			@"2G",
+			nil
+		]
 
 		Boolean valid;
+		// settings are stored in the normal (ascending) order
 		CFIndex value = CFPreferencesGetAppIntegerValue(CFSTR("onDataRate"), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
-		onDataRate = valid ? value : 2; // default to 4G, settings are only available if 4G is supported
+		onDataRate = valid ? value : 0; // default to 4G, settings are only available if 4G is supported
 
 		value = CFPreferencesGetAppIntegerValue(CFSTR("offDataRate"), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
 		offDataRate = valid ? value : 1; // default to 3G
@@ -202,7 +208,7 @@ static void FSDataStatusChanged(void)
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"] ?: [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"] autorelease];
 	cell.textLabel.text = [_supportedDataRates objectAtIndex:indexPath.row];
-	CFIndex value = indexPath.section ? onDataRate : offDataRate;
+	CFIndex value = indexPath.section ? offDataRate : onDataRate;
   cell.accessoryType = (value == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
   return cell;
 }
@@ -210,9 +216,23 @@ static void FSDataStatusChanged(void)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
-  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-  BOOL newValue = (cell.accessoryType == UITableViewCellAccessoryCheckmark);
-  cell.accessoryType = newValue ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
+
+  UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(indexPath.section ? offDataRate : onDataRate) inSection:indexPath.section]];
+	cell.accessoryType = UITableViewCellAccessoryNone;
+
+	cell = [tableView cellForRowAtIndexPath:indexPath];
+	CFStringRef key;
+	NSInteger value = indexPath.row;
+  cell.accessoryType = UITableViewCellAccessoryCheckmark;
+	if (indexPath.section) {
+		key = CFSTR("offDataRate");
+		offDataRate = value;
+	} else {
+		key = CFSTR("onDataRate");
+		onDataRate = value;
+	}
+	CFPreferencesSetAppValue(key, (CFTypeRef)[NSNumber numberWithInteger:value], CFSTR("com.a3tweaks.switch.dataspeed"));
+  CFPreferencesAppSynchronize(CFSTR("com.a3tweaks.switch.dataspeed"));
 }
 
 @end
