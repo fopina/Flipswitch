@@ -28,6 +28,8 @@ void CTTelephonyCenterRemoveObserver(CFNotificationCenterRef center, const void 
 
 @interface DataSpeedSwitchSettingsViewController : UITableViewController <FSSwitchSettingsViewController> {
 	NSArray *_supportedDataRates;
+	NSInteger offDataRate;
+	NSInteger onDataRate;
 }
 @end
 
@@ -163,6 +165,13 @@ static void FSDataStatusChanged(void)
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
 		_supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
+
+		Boolean valid;
+		CFIndex value = CFPreferencesGetAppIntegerValue(CFSTR("onDataRate"), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
+		onDataRate = valid ? value : 2; // default to 4G, settings are only available if 4G is supported
+
+		value = CFPreferencesGetAppIntegerValue(CFSTR("offDataRate"), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
+		offDataRate = valid ? value : 1; // default to 3G
 	}
   return self;
 }
@@ -193,6 +202,8 @@ static void FSDataStatusChanged(void)
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"] ?: [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"] autorelease];
 	cell.textLabel.text = [_supportedDataRates objectAtIndex:indexPath.row];
+	CFIndex value = indexPath.section ? onDataRate : offDataRate;
+  cell.accessoryType = (value == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
   return cell;
 }
 
