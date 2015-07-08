@@ -26,8 +26,9 @@ void CTTelephonyCenterRemoveObserver(CFNotificationCenterRef center, const void 
 @property (nonatomic, readonly) NSBundle *bundle;
 @end
 
-@interface DataSpeedSwitchSettingsViewController : UITableViewController <FSSwitchSettingsViewController>
+@interface DataSpeedSwitchSettingsViewController : UITableViewController <FSSwitchSettingsViewController> {
 	NSArray *_supportedDataRates;
+}
 @end
 
 static void FSDataStatusChanged(void);
