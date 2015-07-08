@@ -169,7 +169,7 @@ static void FSDataStatusChanged(void)
  			@"3G",
 			@"2G",
 			nil
-		]
+		];
 
 		Boolean valid;
 		// settings are stored in the normal (ascending) order
