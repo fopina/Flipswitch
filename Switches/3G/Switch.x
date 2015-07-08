@@ -233,6 +233,14 @@ static void FSDataStatusChanged(void)
 {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
+	// ON must be > OFF
+	if (indexPath.section) {
+		if (indexPath.row <= onDataRate) return;
+	}
+	else {
+		if (indexPath.row >= offDataRate) return;
+	}
+
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(indexPath.section ? offDataRate : onDataRate) inSection:indexPath.section]];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 
