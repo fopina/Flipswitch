@@ -162,8 +162,7 @@ static void FSDataStatusChanged(void)
 - (id)init
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
-		CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
-		_supportedDataRates = CFBridgingRelease(supportedDataRates);
+		_supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
 	}
   return self;
 }
@@ -193,7 +192,7 @@ static void FSDataStatusChanged(void)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"] ?: [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"] autorelease];
-  cell.textLabel.text = @"test";
+	cell.textLabel.text = [_supportedDataRates objectAtIndex:indexPath.row];
   return cell;
 }
 
@@ -203,12 +202,6 @@ static void FSDataStatusChanged(void)
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   BOOL newValue = (cell.accessoryType == UITableViewCellAccessoryCheckmark);
   cell.accessoryType = newValue ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
-}
-
-- (void)dealloc
-{
-	[_supportedDataRates release];
-  [super dealloc];
 }
 
 @end
