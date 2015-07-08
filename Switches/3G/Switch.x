@@ -67,7 +67,7 @@ static void FSDataStatusChanged(void);
 - (FSSwitchState)stateForSwitchIdentifier:(NSString *)switchIdentifier
 {
   NSArray *supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
-  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:_desiredDataRate];
+  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:[self chosenDataRate:TRUE]];
   if (desiredRateIndex == NSNotFound)
     return FSSwitchStateOff;
   NSUInteger currentRateIndex = [supportedDataRates indexOfObject:(id)CTRegistrationGetCurrentMaxAllowedDataRate()];
@@ -152,7 +152,7 @@ static void FSDataStatusChanged(void)
 }
 
 - (CFStringRef)chosenDataRate:(Boolean)forON {
-	CFStringRef key = forON ? CFSTR("onDataRate") : CFSTR("offDataRate")
+	CFStringRef key = forON ? CFSTR("onDataRate") : CFSTR("offDataRate");
 	Boolean valid;
 	CFIndex value = CFPreferencesGetAppIntegerValue(key, CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
 
