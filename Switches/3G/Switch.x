@@ -106,7 +106,7 @@ static DataSpeedSwitch *activeSwitch;
 
 static void FSDataStatusChanged(void)
 {
-	NSString *bundlePath = nil;
+    NSString *bundlePath = nil;
 	CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
 	if (supportedDataRates) {
 		if ([(NSArray *)supportedDataRates containsObject:(id)kCTRegistrationDataRate3G]) {
