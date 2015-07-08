@@ -164,7 +164,9 @@ static void FSDataStatusChanged(void)
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section
 {
-  return 0;
+  CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
+	NSInteger rows = [supportedDataRates count];
+	CFRelease(supportedDataRates);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)table
