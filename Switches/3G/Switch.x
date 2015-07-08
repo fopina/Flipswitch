@@ -27,6 +27,7 @@ void CTTelephonyCenterRemoveObserver(CFNotificationCenterRef center, const void 
 @end
 
 @interface DataSpeedSwitchSettingsViewController : UITableViewController <FSSwitchSettingsViewController>
+	NSArray *_supportedDataRates;
 @end
 
 static void FSDataStatusChanged(void);
@@ -159,32 +160,33 @@ static void FSDataStatusChanged(void)
 
 - (id)init
 {
-  return [super initWithStyle:UITableViewStyleGrouped];
+	if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
+		CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
+		_supportedDataRates = CFBridgingRelease(supportedDataRates);
+	}
+  return self;
 }
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section
 {
-  CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
-	NSInteger rows = CFArrayGetCount(supportedDataRates);
-	CFRelease(supportedDataRates);
-	return rows;
+	return [_supportedDataRates count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)table
 {
-        return 2;
+	return 2;
 }
 
 - (NSString *)tableView:(UITableView *)table titleForHeaderInSection:(NSInteger)section
 {
-        switch (section) {
-                case 0:
-                        return @"ON Data Rate";
-                case 1:
-                        return @"OFF Data Rate";
-                default:
-                        return nil;
-        }
+	switch (section) {
+    case 0:
+      return @"ON Data Rate";
+    case 1:
+      return @"OFF Data Rate";
+    default:
+      return nil;
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -200,6 +202,12 @@ static void FSDataStatusChanged(void)
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   BOOL newValue = (cell.accessoryType == UITableViewCellAccessoryCheckmark);
   cell.accessoryType = newValue ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
+}
+
+- (void)dealloc
+{
+	[_supportedDataRates release];
+  [super dealloc];
 }
 
 @end
