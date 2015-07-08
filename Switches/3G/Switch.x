@@ -67,7 +67,7 @@ static void FSDataStatusChanged(void);
 - (FSSwitchState)stateForSwitchIdentifier:(NSString *)switchIdentifier
 {
   NSArray *supportedDataRates = [(NSArray *)CTRegistrationCopySupportedDataRates() autorelease];
-  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:[self chosenDataRate:TRUE]];
+  NSUInteger desiredRateIndex = [supportedDataRates indexOfObject:(id)[self chosenDataRate:TRUE]];
   if (desiredRateIndex == NSNotFound)
     return FSSwitchStateOff;
   NSUInteger currentRateIndex = [supportedDataRates indexOfObject:(id)CTRegistrationGetCurrentMaxAllowedDataRate()];
