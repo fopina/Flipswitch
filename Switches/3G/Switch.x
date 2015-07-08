@@ -150,7 +150,7 @@ static void FSDataStatusChanged(void)
       }
     CFRelease(supportedDataRates);
   }
-  return nil;
+  return result;
 }
 
 @end
