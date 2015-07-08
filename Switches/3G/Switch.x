@@ -154,7 +154,7 @@ static void FSDataStatusChanged(void)
 - (CFStringRef)chosenDataRate:(Boolean)forON {
 	CFStringRef key = forON ? CFSTR("onDataRate") : CFSTR("offDataRate")
 	Boolean valid;
-	CFIndex value = CFPreferencesGetAppIntegerValue(CFSTR(key), CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
+	CFIndex value = CFPreferencesGetAppIntegerValue(key, CFSTR("com.a3tweaks.switch.dataspeed"), &valid);
 
 	if (!valid) {
 		if ([self.bundle.bundlePath isEqualToString:@"/Library/Switches/LTE.bundle"]) {
