@@ -148,7 +148,6 @@ static void FSDataStatusChanged(void)
     if ([(NSArray *)supportedDataRates containsObject:(id)kCTRegistrationDataRate4G]) {
 				result = [DataSpeedSwitchSettingsViewController class]
       }
-    }
     CFRelease(supportedDataRates);
   }
   return nil;
