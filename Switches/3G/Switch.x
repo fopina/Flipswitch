@@ -142,7 +142,16 @@ static void FSDataStatusChanged(void)
 
 - (Class <FSSwitchSettingsViewController>)settingsViewControllerClassForSwitchIdentifier:(NSString *)switchIdentifier
 {
-  return [DataSpeedSwitchSettingsViewController class];
+	Class result = nil;
+	CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
+  if (supportedDataRates) {
+    if ([(NSArray *)supportedDataRates containsObject:(id)kCTRegistrationDataRate4G]) {
+				result = [DataSpeedSwitchSettingsViewController class]
+      }
+    }
+    CFRelease(supportedDataRates);
+  }
+  return nil;
 }
 
 @end
