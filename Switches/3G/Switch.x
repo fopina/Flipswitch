@@ -146,7 +146,7 @@ static void FSDataStatusChanged(void)
 	CFArrayRef supportedDataRates = CTRegistrationCopySupportedDataRates();
   if (supportedDataRates) {
     if ([(NSArray *)supportedDataRates containsObject:(id)kCTRegistrationDataRate4G]) {
-				result = [DataSpeedSwitchSettingsViewController class]
+				result = [DataSpeedSwitchSettingsViewController class];
       }
     CFRelease(supportedDataRates);
   }
@@ -165,6 +165,23 @@ static void FSDataStatusChanged(void)
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section
 {
   return 0;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)table
+{
+        return 2;
+}
+
+- (NSString *)tableView:(UITableView *)table titleForHeaderInSection:(NSInteger)section
+{
+        switch (section) {
+                case 0:
+                        return @"ON Data Rate";
+                case 1:
+                        return @"OFF Data Rate";
+                default:
+                        return nil;
+        }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
